@@ -1,24 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-function Square({value, onSquareClick}){
-  return <button onClick={onSquareClick} className="square">{value}</button>;
+function Square({value, onSquareClick, itemWinner}){
+  return <button onClick={onSquareClick} className={`square ${itemWinner}`}>{value}</button>;
 }
 
 function Board({xIsNext, squares, onPlay}) {
 
+  const squaresWinner = useRef([]);
+
   function handleClick(i){
-
     if(squares[i] || calculateWinner(squares)) return;
-
     const nextSquares = squares.slice();
     if(xIsNext){
       nextSquares[i] = "X";
     }else{
       nextSquares[i] = "O";
     }
-
     onPlay(nextSquares);
-
   }
 
   function calculateWinner(squares) {
@@ -35,9 +33,11 @@ function Board({xIsNext, squares, onPlay}) {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        squaresWinner.current = [a, b, c];
         return squares[a];
       }
     }
+    squaresWinner.current !== "" && (squaresWinner.current = []);
     return null;
   }
 
@@ -45,8 +45,10 @@ function Board({xIsNext, squares, onPlay}) {
   let status;
   if(winner){
     status = "Ganhador: " + winner;
-  }else{
+  }else if(squares.includes(null)){
     status = "Próximo jogador: " + (xIsNext ? "X" : "O");
+  }else{
+    status = "Ganhador: Empate";
   }
   
   return (
@@ -62,7 +64,12 @@ function Board({xIsNext, squares, onPlay}) {
 
                 if(index_item >= index_div && index_item <= (index_div + 2)){
 
-                  return <Square key={index_item} value={item} onSquareClick={() => handleClick(index_item)} />;
+                  return <Square
+                            key={index_item}
+                            value={item}
+                            onSquareClick={() => handleClick(index_item)}
+                            itemWinner={squaresWinner.current.includes(index_item) && "winner_square"}
+                          />;
 
                 }
 
