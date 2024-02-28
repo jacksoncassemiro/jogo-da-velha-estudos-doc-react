@@ -71,6 +71,12 @@ body {
   width: 34px;
 }
 
+.square.winner_square {
+  border: solid 1px green;
+  box-shadow: 0 0 2px 0.1px green;
+  background-color: greenyellow;
+}
+
 .board-row:after {
   clear: both;
   content: '';
@@ -87,4 +93,11 @@ body {
 
 .game-info {
   margin-left: 20px;
+}
+
+ol li button {
+  text-align: left;
+  width: 200px;
+  margin: 5px auto;
+  padding: 5px;
 }
