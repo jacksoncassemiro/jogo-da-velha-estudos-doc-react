@@ -79,6 +79,7 @@ function Board({xIsNext, squares, onPlay}) {
 export default function Game(){
 
   const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [directionHistory, setDirectionHistory] = useState(false);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
@@ -117,7 +118,8 @@ export default function Game(){
         />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <button onClick={() => setDirectionHistory(!directionHistory)}>Inverter histórico</button>
+        <ol reversed={directionHistory}>{directionHistory ? moves.reverse() : moves}</ol>
       </div>
     </div>
   );
