@@ -94,3 +94,10 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+ol li button {
+  text-align: left;
+  width: 200px;
+  margin: 5px auto;
+  padding: 5px;
+}

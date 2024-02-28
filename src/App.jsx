@@ -16,7 +16,7 @@ function Board({xIsNext, squares, onPlay}) {
     }else{
       nextSquares[i] = "O";
     }
-    onPlay(nextSquares);
+    onPlay(nextSquares, i);
   }
 
   function calculateWinner(squares) {
@@ -88,11 +88,13 @@ export default function Game(){
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [directionHistory, setDirectionHistory] = useState(false);
   const [currentMove, setCurrentMove] = useState(0);
+  const positionMove = useRef([]);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares){
+  function handlePlay(nextSquares, currentIndex){
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setPositionMove(currentIndex)
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
@@ -101,10 +103,22 @@ export default function Game(){
     setCurrentMove(nextMove);
   }
 
+  function setPositionMove(index){
+    const linha = index < 3 ? 1 : index < 6 ? 2 : 3 ;
+    const coluna = index % 3 + 1;
+    
+    positionMove.current = [...positionMove.current.slice(0, currentMove), {
+      linha: linha,
+      coluna: coluna,
+    }];
+  }
+
   const moves = history.map((squares, move) => {
     let description;
     if(move > 0){
-      description = "Você está no movimento #" + move;
+      const historyPosition = positionMove.current[move - 1];
+
+      description = `Você está no movimento #${move}: Linha ${historyPosition.linha} e Coluna ${historyPosition.coluna}`;
     }else{
       description = "Clique para iniciar o jogo";
     }
